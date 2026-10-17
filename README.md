@@ -119,6 +119,7 @@ through the Python model and the plugin and compare.
 CI (`.github/workflows/ci.yml`) runs all of these on Linux for every push and
 pull request, and builds and validates the AU and VST3 on macOS on `main`.
 
+`docs/CPP_STANDARDS.md` is the C++ coding standard (with a review checklist), and
 `CLAUDE.md` holds the rules for AI assistants working in this repo.
 
 ## Versions

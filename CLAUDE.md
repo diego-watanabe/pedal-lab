@@ -6,6 +6,11 @@ prototypes to learn the DSP; AI assistants write most of the C++.
 These rules are not optional. If a task seems to need breaking one, stop and
 ask.
 
+**Read `docs/CPP_STANDARDS.md` before writing any C++.** It is the full
+standard (modern C++ idioms, naming, real-time rules, thread communication,
+DSP conventions) and ends with a review checklist that every change must
+pass. The sections below are the short version.
+
 ## Layout
 
 - `python/` prototypes, experiments, analysis. The Python version of an

@@ -10,6 +10,10 @@ namespace pedallab
 
 /// Gain with a linear ramp between settings, so parameter changes don't click.
 ///
+/// Math: y[n] = g[n] * x[n], where g ramps linearly to each new target over
+/// 20 ms. Ports python/experiments/01_gain.py.
+/// Aliasing: none. Gain is linear, so it creates no new frequencies.
+///
 /// The template for every processor in this library:
 ///   prepare()  called off the audio thread when the sample rate is known
 ///   reset()    clears state; snaps smoothed values to their targets

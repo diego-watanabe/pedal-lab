@@ -33,4 +33,23 @@ Checks: >
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*/(dsp/include/pedallab|plugins/[^/]+/Source|tests/cpp)/[^/]+$'
 FormatStyle: file
+CheckOptions:
+  # Naming, following the JUCE coding standards (docs/CPP_STANDARDS.md section 2)
+  - { key: readability-identifier-naming.ClassCase,             value: CamelCase }
+  - { key: readability-identifier-naming.StructCase,            value: CamelCase }
+  - { key: readability-identifier-naming.EnumCase,              value: CamelCase }
+  - { key: readability-identifier-naming.ConceptCase,           value: CamelCase }
+  - { key: readability-identifier-naming.TemplateParameterCase, value: CamelCase }
+  - { key: readability-identifier-naming.FunctionCase,          value: camelBack }
+  - { key: readability-identifier-naming.MethodCase,            value: camelBack }
+  - { key: readability-identifier-naming.VariableCase,          value: camelBack }
+  - { key: readability-identifier-naming.MemberCase,            value: camelBack }
+  - { key: readability-identifier-naming.ParameterCase,         value: camelBack }
+  - { key: readability-identifier-naming.ConstexprVariableCase, value: camelBack }
+  - { key: readability-identifier-naming.EnumConstantCase,      value: camelBack }
+  - { key: readability-identifier-naming.NamespaceCase,         value: lower_case }
+  - { key: readability-identifier-naming.MacroDefinitionCase,   value: UPPER_CASE }
+  - { key: readability-identifier-naming.MacroDefinitionPrefix, value: PEDALLAB_ }
+  # JUCE's API returns raw owning pointers from a few entry points
+  - { key: cppcoreguidelines-owning-memory.LegacyResourceProducers, value: '::createPluginFilter' }
 ...

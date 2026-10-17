@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <span>
 #include <vector>
 
 using Catch::Approx;
@@ -45,6 +46,37 @@ TEST_CASE("Gain changes ramp instead of jumping", "[gain]")
         biggestStep = std::max(biggestStep, std::abs(block[i] - block[i - 1]));
     CHECK(biggestStep < 0.002f); // 20 ms ramp at 48 kHz: about 0.001 per sample
     CHECK(block.back() == 0.0f);
+}
+
+// A processor must give the same output whether the host sends one big block
+// or many small ones (docs/CPP_STANDARDS.md section 5).
+TEST_CASE("Gain output does not depend on block size", "[gain]")
+{
+    constexpr size_t numSamples = 4800;
+    std::vector<float> input(numSamples);
+    for (size_t i = 0; i < numSamples; ++i)
+        input[i] = std::sin(static_cast<float>(i) * 0.05f);
+
+    auto render = [&](size_t blockSize)
+    {
+        pedallab::Gain gain;
+        gain.prepare(48000.0);
+        gain.setGainDecibels(-12.0f); // starts a ramp that crosses block boundaries
+        auto output = input;
+        for (size_t start = 0; start < numSamples; start += blockSize)
+        {
+            const auto length = std::min(blockSize, numSamples - start);
+            gain.process(std::span<float>(output).subspan(start, length));
+        }
+        return output;
+    };
+
+    const auto reference = render(numSamples);
+    for (const size_t blockSize : {1u, 7u, 64u, 512u})
+    {
+        INFO("block size " << blockSize);
+        CHECK(render(blockSize) == reference);
+    }
 }
 
 // The Python prototype (python/experiments/01_gain.py) is the reference.
