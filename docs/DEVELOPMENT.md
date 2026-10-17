@@ -47,6 +47,23 @@ if the C++ disagrees with it, the C++ is wrong until proven otherwise.
 
 ### 2.1 Windows
 
+**Quick way:** `scripts\setup-windows.ps1` does steps 1 to 4 below with
+winget, unpacks the git history if the repo came as a bundle, and runs the
+first build and tests. From PowerShell in the repo folder:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup-windows.ps1
+```
+
+Expect a few admin prompts and a long wait while Visual Studio installs. Add
+`-WithReaper` to install Reaper too, `-SkipBuild` to skip the build. It's safe
+to run again; finished steps are skipped. The audio driver (step 5) is still
+manual. Afterwards, in each new PowerShell terminal, run
+`. .\scripts\dev-shell.ps1` once before building (it does what step 4
+describes).
+
+The manual steps, if you'd rather do them yourself:
+
 1. **Git for Windows** (https://git-scm.com). Accept the default of checking
    out with LF line endings preserved; the repo's `.gitattributes` handles it.
 
