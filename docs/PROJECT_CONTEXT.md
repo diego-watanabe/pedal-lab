@@ -50,7 +50,11 @@ reference tests), `docs/`, `scripts/` (Windows setup).
   Everything builds and passes on Linux.
 - Git: `Documents\pedal-lab` is a git checkout of `main`, pushed to
   https://github.com/diego-watanabe/pedal-lab (private). CI
-  (`.github/workflows/ci.yml`) runs on every push to `main`.
+  (`.github/workflows/ci.yml`) runs on every push to `main`. First run:
+  python, format, linux (incl. pluginval) and the Linux sanitizers pass;
+  the `windows` job fails at "Test with AddressSanitizer" (build and
+  plain tests pass) and the `macos` job fails at "Build". Not yet
+  diagnosed.
   `pedal-lab.bundle` is gone; GitHub is the history from now on.
 - In progress: running `scripts\setup-windows.ps1`. Git and Visual Studio
   are installed. The conda step failed with an SSL error (old Anaconda);
