@@ -80,6 +80,7 @@ def parse(spec: str, duration=1.0, sr=DEFAULT_SR) -> np.ndarray:
         sweep:20-20000       exponential sweep
         impulse              unit impulse at sample 0
         noise                white noise
+        dc                   constant offset (use with @, e.g. dc@0.3)
         decay:sine:110       sine with a 1 s exponential decay
     """
     terms = []
@@ -108,4 +109,6 @@ def _term(term, duration, sr):
         return impulse(duration, sr)
     if kind == "noise":
         return noise(duration, sr)
+    if kind == "dc":
+        return np.ones(int(round(duration * sr)))
     raise ValueError(f"Unknown signal term: {term!r}")

@@ -1,0 +1,6 @@
+{
+  "experiment": "dc_blocker",
+  "signal": "sine:110@0.5+dc@0.3",
+  "duration": 0.25,
+  "sr": 48000
+}

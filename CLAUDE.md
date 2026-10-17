@@ -11,6 +11,10 @@ standard (modern C++ idioms, naming, real-time rules, thread communication,
 DSP conventions) and ends with a review checklist that every change must
 pass. The sections below are the short version.
 
+**`docs/DEVELOPMENT.md` section 4 is the process for porting a Python
+prototype to C++.** Follow it step by step; `DcBlocker.h` and
+`tests/cpp/test_dc_blocker.cpp` are the model to copy.
+
 ## Layout
 
 - `python/` prototypes, experiments, analysis. The Python version of an

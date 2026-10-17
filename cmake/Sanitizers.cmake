@@ -8,7 +8,15 @@ add_library(pedallab_sanitizers INTERFACE)
 
 if(PEDALLAB_SANITIZER)
     if(MSVC)
-        message(FATAL_ERROR "Sanitizer presets are set up for Clang/GCC only")
+        # Visual Studio supports AddressSanitizer only.
+        if(NOT PEDALLAB_SANITIZER STREQUAL "address")
+            message(FATAL_ERROR "With Visual Studio only the asan preset is available; "
+                                "ubsan, tsan and rtsan run in CI on Linux.")
+        endif()
+        target_compile_options(pedallab_sanitizers INTERFACE /fsanitize=address /Zi)
+        target_link_options(pedallab_sanitizers INTERFACE /INCREMENTAL:NO)
+        message(STATUS "pedal-lab: address sanitizer enabled (MSVC)")
+        return()
     endif()
     if(PEDALLAB_SANITIZER STREQUAL "address")
         set(_flags -fsanitize=address -fno-omit-frame-pointer)

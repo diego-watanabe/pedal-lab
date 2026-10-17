@@ -71,6 +71,20 @@ jobs:
       - run: cmake --preset ${{ matrix.preset }} && cmake --build --preset ${{ matrix.preset }}
       - run: ctest --preset ${{ matrix.preset }}
 
+  # Windows runners cost 2x Linux minutes on private repos: main and manual runs only.
+  windows:
+    if: github.event_name != 'pull_request'
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1  # puts cl, Ninja and CMake from Visual Studio on PATH
+      - name: Build
+        run: cmake --preset dev -DPEDALLAB_COPY_PLUGINS=OFF && cmake --build --preset dev
+      - name: Test
+        run: ctest --preset dev
+      - name: Test with AddressSanitizer
+        run: cmake --preset asan && cmake --build --preset asan && ctest --preset asan
+
   # macOS runners cost 10x Linux minutes on private repos, so this job runs on
   # main and on manual runs only.
   macos:

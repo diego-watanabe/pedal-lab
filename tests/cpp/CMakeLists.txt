@@ -1,4 +1,5 @@
 add_executable(pedallab_tests
+    test_dc_blocker.cpp
     test_gain.cpp)
 
 target_link_libraries(pedallab_tests PRIVATE
