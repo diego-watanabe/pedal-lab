@@ -142,21 +142,47 @@ if (-not $conda) {
 }
 Write-Ok "conda: $conda"
 
-$envList = & $conda env list
-if ($envList -match '(?m)^pedal-lab\s') {
-    Write-Ok 'environment exists'
+# Conda's OpenSSL and other DLLs live in Library\bin, which is only on PATH once conda is
+# "activated" (as in the Anaconda Prompt). Without this, conda fails with "SSL module is
+# not available". Adding the folders here does the same as activating.
+function Add-CondaPrefixToPath([string]$Prefix) {
+    $dirs = @($Prefix, "$Prefix\Library\mingw-w64\bin", "$Prefix\Library\usr\bin", "$Prefix\Library\bin", "$Prefix\Scripts")
+    $env:Path = (($dirs | Where-Object { Test-Path $_ }) -join ';') + ";$env:Path"
+}
+$condaRoot = Split-Path -Parent (Split-Path -Parent $conda)
+Add-CondaPrefixToPath $condaRoot
+
+function Get-EnvPrefix {
+    foreach ($line in (& $conda env list)) {
+        if ($line -match '^pedal-lab\s+\*?\s*(\S.*)$') { return $Matches[1].Trim() }
+    }
+    return $null
+}
+
+$envPrefix = Get-EnvPrefix
+if ($envPrefix) {
+    Write-Ok "environment exists: $envPrefix"
 } else {
     # conda-forge instead of Anaconda's default channel: the default channel now requires
     # accepting its Terms of Service interactively, which fails inside a script.
     Invoke-Checked 'Creating the conda environment' {
         & $conda create --name pedal-lab --channel conda-forge --override-channels python=3.12 --yes
     }
+    $envPrefix = Get-EnvPrefix
+    if (-not $envPrefix) { throw 'The conda environment was created but conda does not list it.' }
 }
+
+# Call the environment's own Python directly: more reliable than "conda run" on older condas.
+Add-CondaPrefixToPath $envPrefix
+$envPython = Join-Path $envPrefix 'python.exe'
 Invoke-Checked 'Installing Python packages' {
-    & $conda run --name pedal-lab --no-capture-output python -m pip install --quiet -r python\requirements.txt
+    & $envPython -m pip install --quiet -r python\requirements.txt
 }
-Invoke-Checked 'Python tests' {
-    & $conda run --name pedal-lab --no-capture-output --cwd python python -m pytest -q
+Push-Location python
+try {
+    Invoke-Checked 'Python tests' { & $envPython -m pytest -q }
+} finally {
+    Pop-Location
 }
 Write-Ok 'Python packages installed and tests pass'
 
