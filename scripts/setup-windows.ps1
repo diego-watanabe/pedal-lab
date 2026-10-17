@@ -146,7 +146,11 @@ $envList = & $conda env list
 if ($envList -match '(?m)^pedal-lab\s') {
     Write-Ok 'environment exists'
 } else {
-    Invoke-Checked 'Creating the conda environment' { & $conda create --name pedal-lab python=3.12 --yes }
+    # conda-forge instead of Anaconda's default channel: the default channel now requires
+    # accepting its Terms of Service interactively, which fails inside a script.
+    Invoke-Checked 'Creating the conda environment' {
+        & $conda create --name pedal-lab --channel conda-forge --override-channels python=3.12 --yes
+    }
 }
 Invoke-Checked 'Installing Python packages' {
     & $conda run --name pedal-lab --no-capture-output python -m pip install --quiet -r python\requirements.txt

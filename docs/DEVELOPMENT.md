@@ -76,7 +76,7 @@ The manual steps, if you'd rather do them yourself:
 3. **Python.** You have Anaconda, so a conda environment is the easiest
    route. From the Anaconda Prompt:
    ```bat
-   conda create -n pedal-lab python=3.12
+   conda create -n pedal-lab -c conda-forge --override-channels python=3.12
    conda activate pedal-lab
    cd path\to\pedal-lab\python
    pip install -r requirements.txt
