@@ -47,13 +47,17 @@ reference tests), `docs/`, `scripts/` (Windows setup).
 - Done: repo scaffold, Python lab with 8 exercises (01 gain complete),
   live mode, DC blocker worked example through the whole pipeline,
   C++ standards, development guide, code tour, Windows setup script.
-  Everything builds and passes on Linux; CI defined but not yet on GitHub.
+  Everything builds and passes on Linux.
+- Git: `Documents\pedal-lab` is a git checkout of `main`, pushed to
+  https://github.com/diego-watanabe/pedal-lab (private). CI
+  (`.github/workflows/ci.yml`) runs on every push to `main`.
+  `pedal-lab.bundle` is gone; GitHub is the history from now on.
 - In progress: running `scripts\setup-windows.ps1`. Git and Visual Studio
   are installed. The conda step failed with an SSL error (old Anaconda);
-  a fix was sent but not yet confirmed.
-- Git history arrives as `pedal-lab.bundle`, unpacked by the setup script.
-- Not done: GitHub repo (account not connected), RME ASIO driver, first
-  Windows C++ build.
+  the fix is now in the folder (commit 8c1b9ce) but not yet confirmed by
+  a rerun. The script's git step will report "already set up".
+- Not done: RME ASIO driver, first Windows C++ build, first push from
+  Windows (Git Credential Manager will ask to sign in to GitHub).
 - Next milestone: a passthrough (`python/experiments/00_passthrough.py`,
   `y = x`) played live with the bass, then exercises 02 to 08, then
   captures of the Octabvre and RAT.
