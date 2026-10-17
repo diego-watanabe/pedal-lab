@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+# Short reference WAVs for the C++ tests are committed as plain binaries.
+*.wav binary
+
+# To keep captures in git later, install Git LFS, remove the capture lines
+# from .gitignore and uncomment these:
+# captures/**/*.wav  filter=lfs diff=lfs merge=lfs -text
+# captures/**/*.flac filter=lfs diff=lfs merge=lfs -text

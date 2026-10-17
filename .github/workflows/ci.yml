@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: pytest
+
+  format:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: clang-format
+        run: |
+          git ls-files '*.h' '*.hpp' '*.cpp' | xargs clang-format --dry-run --Werror
+
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install JUCE dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libasound2-dev libx11-dev libxrandr-dev \
+            libxinerama-dev libxcursor-dev libxext-dev libxi-dev libxrender-dev libxcomposite-dev \
+            libfreetype-dev libfontconfig1-dev libgl1-mesa-dev
+      - name: Build
+        run: cmake --preset dev && cmake --build --preset dev
+      - name: Test
+        run: ctest --preset dev
+      - name: clang-tidy
+        run: |
+          git ls-files 'tests/cpp/*.cpp' 'plugins/*.cpp' | xargs clang-tidy -p build/dev
+      - name: pluginval
+        run: |
+          curl -sSL -o pluginval.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip
+          unzip -q pluginval.zip
+          for p in build/dev/plugins/*/*_artefacts/Debug/VST3/*.vst3; do
+            ./pluginval --strictness-level 10 --skip-gui-tests --validate "$p"
+          done
+
+  sanitizers:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [asan, ubsan, tsan]
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build
+      # Recent runner kernels randomize memory more than TSan expects.
+      - run: sudo sysctl vm.mmap_rnd_bits=28
+      - run: cmake --preset ${{ matrix.preset }} && cmake --build --preset ${{ matrix.preset }}
+      - run: ctest --preset ${{ matrix.preset }}
+
+  # macOS runners cost 10x Linux minutes on private repos, so this job runs on
+  # main and on manual runs only.
+  macos:
+    if: github.event_name != 'pull_request'
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install ninja
+      - name: Build
+        run: cmake --preset dev -DPEDALLAB_COPY_PLUGINS=OFF && cmake --build --preset dev
+      - name: Test
+        run: ctest --preset dev
+      - name: pluginval (VST3 and AU)
+        run: |
+          curl -sSL -o pluginval.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip
+          unzip -q pluginval.zip
+          for p in build/dev/plugins/*/*_artefacts/Debug/VST3/*.vst3 build/dev/plugins/*/*_artefacts/Debug/AU/*.component; do
+            pluginval.app/Contents/MacOS/pluginval --strictness-level 10 --skip-gui-tests --validate "$p"
+          done

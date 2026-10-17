@@ -1,0 +1,77 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "dev",
+      "displayName": "Debug, plugins and tests",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "release",
+      "displayName": "Release plugins",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Release", "PEDALLAB_BUILD_TESTS": "OFF" }
+    },
+    {
+      "name": "dsp",
+      "displayName": "DSP library and tests only (fast, no JUCE)",
+      "inherits": "base",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "PEDALLAB_BUILD_PLUGINS": "OFF" }
+    },
+    {
+      "name": "asan",
+      "displayName": "Tests with Address + Undefined Behavior sanitizers",
+      "inherits": "dsp",
+      "cacheVariables": { "PEDALLAB_SANITIZER": "address" }
+    },
+    {
+      "name": "ubsan",
+      "inherits": "dsp",
+      "cacheVariables": { "PEDALLAB_SANITIZER": "undefined" }
+    },
+    {
+      "name": "tsan",
+      "displayName": "Tests with Thread sanitizer",
+      "inherits": "dsp",
+      "cacheVariables": { "PEDALLAB_SANITIZER": "thread" }
+    },
+    {
+      "name": "rtsan",
+      "displayName": "Tests with Realtime sanitizer (Clang 20+, e.g. Homebrew LLVM)",
+      "inherits": "dsp",
+      "cacheVariables": { "PEDALLAB_SANITIZER": "realtime" }
+    },
+    {
+      "name": "xcode",
+      "displayName": "Xcode project (for debugging plugins in a host)",
+      "generator": "Xcode",
+      "binaryDir": "${sourceDir}/build/xcode",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "dev", "configurePreset": "dev" },
+    { "name": "release", "configurePreset": "release" },
+    { "name": "dsp", "configurePreset": "dsp" },
+    { "name": "asan", "configurePreset": "asan" },
+    { "name": "ubsan", "configurePreset": "ubsan" },
+    { "name": "tsan", "configurePreset": "tsan" },
+    { "name": "rtsan", "configurePreset": "rtsan" }
+  ],
+  "testPresets": [
+    { "name": "dev", "configurePreset": "dev", "output": { "outputOnFailure": true } },
+    { "name": "dsp", "configurePreset": "dsp", "output": { "outputOnFailure": true } },
+    { "name": "asan", "configurePreset": "asan", "output": { "outputOnFailure": true } },
+    { "name": "ubsan", "configurePreset": "ubsan", "output": { "outputOnFailure": true } },
+    { "name": "tsan", "configurePreset": "tsan", "output": { "outputOnFailure": true } },
+    { "name": "rtsan", "configurePreset": "rtsan", "output": { "outputOnFailure": true } }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "experiment": "01_gain",
+  "signal": "sine:110",
+  "duration": 0.25,
+  "sr": 48000
+}

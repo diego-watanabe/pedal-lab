@@ -1,0 +1,36 @@
+---
+# Bug-finding checks, not style policing (clang-format handles style).
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  cert-*,
+  -cert-err58-cpp,
+  clang-analyzer-*,
+  concurrency-*,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-bounds-constant-array-index,
+  -cppcoreguidelines-avoid-c-arrays,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-non-private-member-variables-in-classes,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  -misc-include-cleaner,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-function-cognitive-complexity,
+  -readability-uppercase-literal-suffix,
+  -readability-braces-around-statements,
+  -cppcoreguidelines-avoid-do-while,
+  -misc-use-anonymous-namespace,
+  -cppcoreguidelines-special-member-functions
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*/(dsp/include/pedallab|plugins/[^/]+/Source|tests/cpp)/[^/]+$'
+FormatStyle: file
+...

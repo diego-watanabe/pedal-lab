@@ -1,0 +1,33 @@
+---
+# Close to JUCE's own style, so wrapper code and library code read alike.
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: c++20
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+NamespaceIndentation: None
+FixNamespaceComments: true
+IndentPPDirectives: BeforeHash
+PointerAlignment: Left
+SpaceAfterTemplateKeyword: true
+BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: Never
+AccessModifierOffset: -4
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^"'
+    Priority: 1
+  - Regex: '^<(pedallab|juce_)'
+    Priority: 2
+  - Regex: '^<catch2/'
+    Priority: 3
+  - Regex: '^<'
+    Priority: 4
+...
