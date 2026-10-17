@@ -8,6 +8,9 @@ frequencies appear (gain is linear).
 """
 import numpy as np
 
+# No state is kept between samples, so live.py can call process() per block.
+STATELESS = True
+
 SIGNAL = "sine:110"
 FMAX = 1000
 

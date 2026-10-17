@@ -18,7 +18,7 @@ Related documents:
       │
       ▼
  ① Python experiment        python/experiments/…           you write this
-      │  run.py: listen, plot, measure
+      │  run.py: render, plot, measure    live.py: play through it
       ▼
  ② Python tests             python/tests/…                 predictions as code
       │
@@ -122,7 +122,7 @@ environment active):
 
 ```sh
 cd python
-pytest                    # expect: 3 passed, 9 skipped
+pytest                    # expect: 10 passed, 9 skipped
 python run.py 01          # writes python/renders/01_gain/
 cd ..
 cmake --preset dev        # first run downloads JUCE and Catch2: a few minutes
@@ -238,17 +238,32 @@ Conventions that make the later port straightforward:
 - **Set `SIGNAL`** to an input that exercises the behavior. For the DC blocker
   that's a tone plus an offset: `"sine:110@0.5+dc@0.3"`.
 - **Stateful algorithms are explicit per-sample loops with named state.**
-  It's slower in Python than vectorized numpy, but it maps line for line
-  onto C++:
+  This maps line for line onto C++. Compile the loop with numba so it runs
+  fast enough to play live, and keep the state in a small `Processor` class
+  so it survives between blocks:
   ```python
-  x1 = 0.0
-  y1 = 0.0
-  for n in range(len(x)):
-      y1 = g * (x[n] - x1) + R * y1
-      x1 = x[n]
-      y[n] = y1
+  @numba.njit
+  def _kernel(x, y, state, R, g):
+      x1, y1 = state[0], state[1]
+      for n in range(len(x)):
+          y1 = g * (x[n] - x1) + R * y1
+          x1 = x[n]
+          y[n] = y1
+      state[0], state[1] = x1, y1
+
+  class Processor:
+      def __init__(self, sr): ...        # coefficients, state = np.zeros(2)
+      def reset(self): ...               # state[:] = 0
+      def process(self, block): ...      # calls _kernel
+
+  def process(x, sr):                    # whole-signal entry point
+      return Processor(sr).process(x)
   ```
-  Stateless operations (clipping, `abs`, gain) can stay vectorized.
+  This is the same shape as the C++ class (prepare, reset, process), which is
+  the point: the port becomes almost mechanical.
+- **Stateless operations** (clipping, `abs`, gain) can stay as vectorized
+  numpy in `process(x, sr)`. Add `STATELESS = True` so `live.py` knows it can
+  call `process()` on each block.
 
 ### Step 2: Run it, look at it, listen to it
 
@@ -262,6 +277,19 @@ This writes `python/renders/dc_blocker/` with `input.wav`, `output.wav` and
 the strongest spectral peaks. Check that the plot and numbers match the
 predictions in your docstring. Listen to `output.wav`. Try other inputs:
 `--signal "decay:sine:41.2"` for a fading low E, `--input` with a real DI.
+
+Then play through it:
+
+```sh
+python live.py --list-devices
+python live.py dc_blocker --device Babyface --record takes/first-try
+```
+
+Press Enter to toggle bypass and compare, `r` and Enter to reset the state,
+`q` and Enter to quit. With `--record`, the folder gets `dry.wav` (what you
+played) and `wet.wav` (the result). A recorded `dry.wav` is a perfect test
+input afterwards: `python run.py <experiment> --input takes/first-try/dry.wav`.
+See section 4.1 for devices, latency and limits.
 
 ### Step 3: Turn the predictions into tests
 
@@ -369,6 +397,31 @@ the plugin, and compare by ear and with spectra. Differences found here go
 back to step 1: fix the prototype, regenerate the reference, and let the C++
 tests drive the C++ fix.
 
+### 4.1 Live mode in detail
+
+`live.py` streams audio from your interface through an experiment in real
+time, block by block, the way a plugin host would.
+
+- **Devices.** `--list-devices` shows every device and host API. On Windows,
+  choose the Babyface's ASIO entry if it's listed; otherwise use its WASAPI
+  entry with `--exclusive`. `--device` takes a name fragment (`Babyface`) or
+  an index.
+- **Channels.** `--in-channel` is the 1-based input your bass is plugged
+  into (check the Babyface's input numbering in TotalMix), `--out-channels`
+  the outputs to play on (default `1,2`).
+- **Latency.** `--blocksize` sets the trade-off: 64 or 128 samples (1.3 to
+  2.7 ms at 48 kHz) feels immediate but may click; 256 or 512 is safer. The
+  script prints the latency the driver reports.
+- **No instrument handy:** `--file some.wav` loops a recording as the input.
+- **Limits.** Python can't guarantee real-time deadlines: garbage collection
+  (disabled while the stream runs) and the interpreter can still cause the
+  odd click, and latency is higher than the final plugin's. Use live mode to
+  judge the character and feel of a prototype, not to measure latency or
+  performance.
+- **Which experiments run live:** ones with a `Processor` class, or with
+  `STATELESS = True`. Anything else is refused, because calling a stateful
+  `process()` on each block would reset its state every block.
+
 ### Common porting mistakes, and what catches them
 
 Measured on the DC blocker:
@@ -419,6 +472,8 @@ cd python
 python run.py <experiment> [--signal SPEC] [--input FILE] [--duration S]
 pytest [-k NAME]
 python export_reference.py <experiment> [--signal SPEC] [--duration S]
+python live.py --list-devices
+python live.py <experiment> --device NAME [--in-channel N] [--blocksize N] [--record DIR] [--file WAV]
 
 # C++
 cmake --preset dev && cmake --build --preset dev && ctest --preset dev

@@ -8,6 +8,9 @@ at 13 kHz. Those folded peaks are aliasing. Try --signal "sine:110" too.
 """
 import numpy as np
 
+# No state is kept between samples, so live.py can call process() per block.
+STATELESS = True
+
 SIGNAL = "sine:5000"
 FMAX = 24000
 WINDOW_MS = 2

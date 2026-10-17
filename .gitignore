@@ -10,6 +10,7 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 python/renders/
+python/takes/
 
 # Captures are large: kept locally, out of git (see captures/README.md)
 captures/**/*.wav

@@ -6,6 +6,9 @@ Predictions:
   * a sine at CUTOFF comes out about 3 dB quieter
   * an impulse (--signal impulse) comes out as a decaying exponential, and
     its spectrum is the filter's frequency response
+
+To play it live with live.py, wrap it in a Processor class that keeps y[n-1]
+between blocks (see examples/dc_blocker.py).
 """
 import numpy as np
 

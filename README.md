@@ -22,6 +22,8 @@ cmake/         warnings, sanitizers, pinned dependencies
 - **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)**: setting up Windows or
   macOS, the test environment, and the step-by-step process from Python
   prototype to tested C++ and plugin, with a worked example.
+- **[docs/CODE_TOUR.md](docs/CODE_TOUR.md)**: what every file does, and
+  how a built plugin gets from the build folder to your bass and headphones.
 - **[docs/CPP_STANDARDS.md](docs/CPP_STANDARDS.md)**: the C++ coding
   standard and review checklist.
 - **[captures/README.md](captures/README.md)**: recording and reamping real
@@ -34,6 +36,7 @@ After setting up your machine (see the development guide):
 
 ```sh
 cd python && pytest && python run.py 01 && cd ..
+cd python && python live.py --list-devices && cd ..   # then play: python live.py dc_blocker --device Babyface
 cmake --preset dev && cmake --build --preset dev && ctest --preset dev
 ```
 

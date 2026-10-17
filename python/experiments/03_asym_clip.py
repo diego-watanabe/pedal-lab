@@ -7,6 +7,9 @@ ones, plus a DC offset.
 """
 import numpy as np
 
+# No state is kept between samples, so live.py can call process() per block.
+STATELESS = True
+
 SIGNAL = "sine:110"
 FMAX = 2000
 

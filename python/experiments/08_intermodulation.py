@@ -7,6 +7,9 @@ The difference tone at 55 Hz is the giveaway: neither input has it.
 """
 import numpy as np
 
+# No state is kept between samples, so live.py can call process() per block.
+STATELESS = True
+
 SIGNAL = "sine:110@0.5+sine:165@0.5"
 FMAX = 1000
 WINDOW_MS = 60

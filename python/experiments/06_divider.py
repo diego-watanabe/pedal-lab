@@ -7,6 +7,9 @@ frequency. Multiply that by the input.
 Prediction: the lowest component is 55 Hz, an octave below 110 Hz, and the
 output follows the input's level. Then try --signal "decay:sine:110" and a
 real bass DI with --input.
+
+To play it live with live.py, wrap it in a Processor class that keeps the
+flip-flop state between blocks (see examples/dc_blocker.py).
 """
 import numpy as np
 

@@ -16,9 +16,14 @@ Predictions:
     time constant of 1 / (2*pi*CUTOFF_HZ), about 16 ms at 10 Hz)
   * the 110 Hz tone passes almost untouched (within 0.05 dB)
 
-Written as an explicit per-sample loop with named state (x1, y1) because the
-filter has memory: this is the shape the C++ port will have.
+Structure, which every stateful experiment can copy:
+  * _kernel: the per-sample loop, compiled by numba. State (x[n-1], y[n-1])
+    lives in a small array passed in and updated in place.
+  * Processor: holds coefficients and state between blocks, so live.py can
+    run it in real time. Same shape as the C++ class (prepare/reset/process).
+  * process(x, sr): the whole-signal entry point run.py and the tests use.
 """
+import numba
 import numpy as np
 
 SIGNAL = "sine:110@0.5+dc@0.3"
@@ -28,14 +33,32 @@ WINDOW_MS = 200
 CUTOFF_HZ = 10.0
 
 
-def process(x: np.ndarray, sr: int) -> np.ndarray:
-    R = np.exp(-2.0 * np.pi * CUTOFF_HZ / sr)
-    g = (1.0 + R) / 2.0
-    y = np.empty_like(x)
-    x1 = 0.0
-    y1 = 0.0
+@numba.njit
+def _kernel(x, y, state, R, g):
+    x1 = state[0]
+    y1 = state[1]
     for n in range(len(x)):
         y1 = g * (x[n] - x1) + R * y1
         x1 = x[n]
         y[n] = y1
-    return y
+    state[0] = x1
+    state[1] = y1
+
+
+class Processor:
+    def __init__(self, sr):
+        self.R = np.exp(-2.0 * np.pi * CUTOFF_HZ / sr)
+        self.g = (1.0 + self.R) / 2.0
+        self.state = np.zeros(2)  # [x[n-1], y[n-1]]
+
+    def reset(self):
+        self.state[:] = 0.0
+
+    def process(self, block):
+        out = np.empty_like(block)
+        _kernel(block, out, self.state, self.R, self.g)
+        return out
+
+
+def process(x: np.ndarray, sr: int) -> np.ndarray:
+    return Processor(sr).process(x)
