@@ -60,8 +60,12 @@ reference tests), `docs/`, `scripts/` (Windows setup).
   are installed. The conda step failed with an SSL error (old Anaconda);
   the fix is now in the folder (commit 8c1b9ce) but not yet confirmed by
   a rerun. The script's git step will report "already set up".
-- Not done: RME ASIO driver, first Windows C++ build, first push from
-  Windows (Git Credential Manager will ask to sign in to GitHub).
+- RME driver installed (TotalMix FX running), so ASIO is available to
+  JUCE and Ableton Live 12. `live.py` only sees ASIO devices if
+  `SD_ENABLE_ASIO` is set before `sounddevice` is imported (pip wheel
+  default); not yet handled in the script.
+- Not done: first Windows C++ build, first push from Windows (Git
+  Credential Manager will ask to sign in to GitHub).
 - Next milestone: a passthrough (`python/experiments/00_passthrough.py`,
   `y = x`) played live with the bass, then exercises 02 to 08, then
   captures of the Octabvre and RAT.
