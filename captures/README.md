@@ -29,7 +29,7 @@ its settings for the processed files:
 
 ```
 di/stingray-active_low-e-sustain.wav
-pedal/stingray-active_low-e-sustain__octabvre_dry0-sub1max-sub2off.wav
+pedal/stingray-active_low-e-sustain__octabvre-mini_mix-max_tone-min_vol-noon.wav
 ```
 
 Take a photo of the knobs for each setting and keep it next to the file.
