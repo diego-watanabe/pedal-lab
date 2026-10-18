@@ -27,8 +27,9 @@ conversation. Update the status section as things change.
 - Also owned, possible later measurement projects: a UA digital
   compressor pedal and a Seymour Duncan compressor (exact models not yet
   noted), a Source Audio Atlas (digital), plus the Tonehammer itself.
-- Also owned: DemonFX Fuzz Works 7 (two germanium transistors; controls
-  match a Z.Vex Fuzz Factory 7). Hard to model: self-oscillation and
+- Also owned: DemonFX Fuzz Works 7, a Z.Vex Fuzz Factory 7 clone that
+  people have measured as identical (two germanium transistors), so
+  Fuzz Factory circuit analyses apply. Hard to model: self-oscillation and
   germanium behavior need circuit-level simulation, not just captures.
 - Computer: Windows PC (desktop-ahpqqd1), repo at `Documents\pedal-lab`.
 
