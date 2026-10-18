@@ -21,7 +21,8 @@ conversation. Update the status section as things change.
 - Basses: active and passive StingRay (humbuckers), P-bass and Mustang
   (split coils), fretless Big Al (silent single coils).
 - Pedals to model first: a ProCo RAT (clone built in college; real circuit
-  not remembered) and a 3Leaf Audio Octabvre (OC-2 inspired octave down).
+  not remembered) and a 3Leaf Audio Octabvre (OC-2 inspired octave down),
+  probably the Mini (one footswitch; Volume, Mix, Tone), to be confirmed.
 - Usual chain includes an Aguilar Tonehammer (bypassed for captures).
 - Computer: Windows PC (desktop-ahpqqd1), repo at `Documents\pedal-lab`.
 
@@ -66,6 +67,9 @@ reference tests), `docs/`, `scripts/` (Windows setup).
   default); not yet handled in the script.
 - Not done: first Windows C++ build, first push from Windows (Git
   Credential Manager will ask to sign in to GitHub).
+- Research notes (OC-2 circuit, Octabvre versions, 3Leaf Doom, Noble
+  Preamp/DI, Empress compressors): a Claude doc,
+  https://claude.ai/code/artifact/3faa1898-a6f8-4a6a-a732-a89d0049140d
 - Next milestone: a passthrough (`python/experiments/00_passthrough.py`,
   `y = x`) played live with the bass, then exercises 02 to 08, then
   captures of the Octabvre and RAT.
