@@ -26,7 +26,7 @@ conversation. Update the status section as things change.
 - Usual chain includes an Aguilar Tonehammer (bypassed for captures).
 - Also owned, possible later measurement projects: a UA digital
   compressor pedal and a Seymour Duncan compressor (exact models not yet
-  noted), plus the Tonehammer itself.
+  noted), a Source Audio Atlas (digital), plus the Tonehammer itself.
 - Computer: Windows PC (desktop-ahpqqd1), repo at `Documents\pedal-lab`.
 
 ## How we work
