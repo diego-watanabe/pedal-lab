@@ -70,6 +70,10 @@ reference tests), `docs/`, `scripts/` (Windows setup).
 - Research notes (OC-2 circuit, Octabvre versions, 3Leaf Doom, Noble
   Preamp/DI, Empress compressors): a Claude doc,
   https://claude.ai/code/artifact/3faa1898-a6f8-4a6a-a732-a89d0049140d
+- Octabvre plan: model the Mini first, calibrated against captures of
+  the real pedal. Later, maybe an MK III-style superset (separate octave
+  and sub levels, sub-only switch, voicing switch) with the Mini as the
+  measured voicing; other voicings would need captures of a MkII.
 - Next milestone: a passthrough (`python/experiments/00_passthrough.py`,
   `y = x`) played live with the bass, then exercises 02 to 08, then
   captures of the Octabvre and RAT.
