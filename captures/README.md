@@ -13,13 +13,17 @@ captures/
 ## Recording setup
 
 ```
-Babyface line out → reamp box → pedal → Babyface instrument (Hi-Z) input
+bass → splitter ─┬─→ Babyface input 1           (dry, saved in di/)
+                 └─→ pedal → Babyface input 2   (saved in pedal/)
 ```
 
+- Record both inputs at once, so the dry and pedal files are the same
+  performance and already line up.
+- The dry file is what every simulation runs on (`run.py`); the pedal
+  file is what the simulation is checked against.
+- One take per pedal setting you want to compare.
 - 48 kHz, 24-bit or 32-bit float, mono.
-- Start every file with an alignment click so input and output can be lined
-  up exactly, cancelling the interface's round-trip latency.
-- Keep the input gain the same as when the DI was recorded.
+- Same input gain on both channels, and the same for every take.
 - Bypass anything else in the chain (no Tonehammer).
 
 ## Naming
