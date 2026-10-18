@@ -24,6 +24,9 @@ conversation. Update the status section as things change.
   not remembered) and a 3Leaf Audio Octabvre (OC-2 inspired octave down),
   the Mini (one footswitch; Volume, Mix, Tone).
 - Usual chain includes an Aguilar Tonehammer (bypassed for captures).
+- Also owned, possible later measurement projects: a UA digital
+  compressor pedal and a Seymour Duncan compressor (exact models not yet
+  noted), plus the Tonehammer itself.
 - Computer: Windows PC (desktop-ahpqqd1), repo at `Documents\pedal-lab`.
 
 ## How we work
