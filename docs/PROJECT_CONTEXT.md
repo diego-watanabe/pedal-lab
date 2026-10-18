@@ -22,7 +22,7 @@ conversation. Update the status section as things change.
   (split coils), fretless Big Al (silent single coils).
 - Pedals to model first: a ProCo RAT (clone built in college; real circuit
   not remembered) and a 3Leaf Audio Octabvre (OC-2 inspired octave down),
-  probably the Mini (one footswitch; Volume, Mix, Tone), to be confirmed.
+  the Mini (one footswitch; Volume, Mix, Tone).
 - Usual chain includes an Aguilar Tonehammer (bypassed for captures).
 - Computer: Windows PC (desktop-ahpqqd1), repo at `Documents\pedal-lab`.
 
